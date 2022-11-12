@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>猫咖控制台</title>
+    <!-- Bootstrap Styles-->
+    <link href="/static/css/bootstrap.min2.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="/static/css/font-awesome.css" rel="stylesheet" />
+    <!-- Morris Chart Styles-->
+    <link href="/static/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <!-- Custom Styles-->
+    <link href="/static/css/custom-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/userReceiveStyle.css">
+     <!-- Google Fonts-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+       <!-- css files -->
+	<link rel="stylesheet" href="/static/css/userRegisterStyle.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/static/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div th:replace="comm/comm::company-top"></div>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div th:replace="comm/comm::company-left"></div>
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+			 <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-header">
+                            公司信息 <small> Company Info</small>
+                        </h1>
+                    </div>
+                </div> 
+
+                <div class="row" id="app">
+                    <div class="w3l-contact-10">
+                        <div class="form-41-mian section-gap">
+                          <div class="wrapper">
+                            <div class="form-inner-cont">
+                                <h3>公司信息</h3>
+                                <div class="form-input">
+                                  <label for="w3lName">公司名</label>
+                                  <input type="text" name="w3lName" id="w3lName" v-model="company.comName" placeholder="请输入公司名" required="" />
+                                </div>
+                                <div class="form-input">
+                                  <label for="w3lSubject">公司地址</label>
+                                  <input type="text" name="w3lSubject" id="w3lSubject" v-model="company.comAddress" placeholder="请输入公司地址" required />
+                                </div>
+                                <div class="form-input">
+                                  <label for="w3lSender">公司联系方式</label>
+                                  <input type="text" name="w3lSender" id="w3lSender" v-model="company.comTelephone" placeholder="请输入联系手机号" required />
+                                </div>
+                                <div class="form-input">
+                                  <label for="w3lMessage">简介</label>
+                                  <textarea name="w3lMessage" id="w3lMessage" v-model="company.comIntro" placeholder="请输入简介" required></textarea>
+                                </div>
+                                <button class="btn" @click="companyUpdate(company)">提交</button>
+                            </div>
+                          </div>
+                        </div>
+                    
+                        </div>
+                </div>
+
+                 <!-- /. ROW  -->
+				 <footer><p>@管理控制台</p></footer>
+				</div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="/static/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/js/morris/morris.js"></script>
+    <!-- Custom J -->
+    <script src="/static/js/custom-scripts.js"></script>
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                company:{
+                    comName:'',
+                    comAddress:'',
+                    comTelephone:'',
+                    comIntro:''
+                }
+            },
+            methods:{
+                companyUpdate(company){
+                    console.log(company)
+                    let formData = new FormData()
+                    formData.append('companyId',company.companyId)
+                    formData.append('comName',company.comName)
+                    formData.append('comAddress',company.comAddress)
+                    formData.append('comTelephone',company.comTelephone)
+                    formData.append('comIntro',company.comIntro)
+                    axios.post('/company/update',formData).then(res=>{
+                        if (res.data){
+                            alert('提交成功')
+                        }
+                    })
+                }
+            },
+            mounted(){
+                console.log('vue start')
+                axios.get('/company/info').then(res=>{
+                    console.log(res.data)
+                    if (res.data){
+                        this.company = res.data
+                    }else {
+                        this.company ={
+                            companyId:'',
+                            comName:'',
+                            comAddress:'',
+                            comTelephone:'',
+                            comIntro:''
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+    
+   
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<style>
+    .mine{
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+    }
+</style>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main id="app">
+        <!-- Hero Area Start-->
+        <div class="slider-area gray-bg position-relative">
+            <div class="single-slider d-flex align-items-center slider-height2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-caption hero-caption2">
+                                <h2>职位详情</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Hero Area End -->
+        <div class="mine">
+            <p id="positionId" th:text="${positionDetail.positionId}"></p>
+            <p id="companyId" th:text="${positionDetail.companyId}"></p>
+        </div>
+
+
+
+        <div class="job_details_area section-bg2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="job_details_header">
+                            <div class="single_jobs white-bg d-flex justify-content-between">
+                                <div class="jobs_left d-flex align-items-center">
+                                    <div class="jobs_conetent">
+                                        <a href="#"><h4  th:text="${positionDetail.title}">职位名</h4></a>
+                                        <div class="links_locat d-flex align-items-center">
+                                            <div class="location">
+                                                <p th:text="${positionDetail.comAddress}"> <i class="fas fa-map-marker-alt"></i> 地址</p>
+                                            </div>
+                                            <div class="location">
+                                                <p th:text="${positionDetail.createTime}"> <i class="far fa-clock"></i> 创建时间</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="descript_wrap white-bg">
+                            <div class="single_wrap">
+                                <h4>工作介绍</h4>
+                                <p th:text="${positionDetail.intro}"></p>
+                            </div>
+                        </div>
+                        <div class="apply_job_form white-bg">
+                            <h4>操作</h4>
+                            <form>
+                                <div class="row">
+                                <div class="col-md-12">
+                                    <div class="submit_btn">
+                                        <button class="boxed-btn3 w-100" @click="saveReceive">投递简历</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="job_sumary">
+                        <div class="summery_header">
+                            <h3 th:text="${positionDetail.comName}">公司名</h3>
+                        </div>
+                        <div class="job_content">
+                            <ul>
+                                <li>法人代表： <span th:text="${positionDetail.username}">12 Nov, 2019</span></li>
+                                <li>联系方式： <span th:text="${positionDetail.comTelephone}">2 Position</span></li>
+                                <li>公司地址： <span th:text="${positionDetail.comAddress}">50k - 120k/y</span></li>
+                                <li>公司简介: <span th:text="${positionDetail.comIntro}">California, USA</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="job_location_wrap">
+                        <div class="job_lok_inner">
+                            <div id="map" style="height: 200px;"></div>
+                            <script>
+                              function initMap() {
+                                var uluru = {lat: -25.363, lng: 131.044};
+                                var grayStyles = [
+                                {
+                                    featureType: "all",
+                                    stylers: [
+                                    { saturation: -90 },
+                                    { lightness: 50 }
+                                    ]
+                                },
+                                {elementType: 'labels.text.fill', stylers: [{color: '#ccdee9'}]}
+                                ];
+                                var map = new google.maps.Map(document.getElementById('map'), {
+                                  center: {lat: -31.197, lng: 150.744},
+                                  zoom: 9,
+                                  styles: grayStyles,
+                                  scrollwheel:  false
+                              });
+                            }
+                            
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+<!-- JS here -->
+<!-- Jquery, Popper, Bootstrap -->
+<div th:replace="comm/comm::user-js"></div>
+<script>
+
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            positionId:'',
+            companyId:''
+        },
+        methods:{
+            saveReceive(){
+                console.log(this.positionId,this.companyId)
+                // 保存投递的简历
+                let formData = new FormData()
+                formData.append('companyId',this.companyId)
+                formData.append('positionId',this.positionId)
+                axios.post('/receive/add',formData).then(res=>{
+                    if (res.data){
+                        alert('简历以提交')
+                    }else {
+                        alert('出错了 请稍后再试')
+                    }
+                })
+            }
+        },
+        mounted(){
+            console.log('vue start')
+            let positionId = document.querySelector('#positionId').innerText
+            let companyId =  document.querySelector('#companyId').innerText
+            this.positionId = positionId
+            this.companyId = companyId
+        }
+    })
+</script>
+</body>
+</html>

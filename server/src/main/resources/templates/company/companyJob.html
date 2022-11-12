@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head th:replace="comm/comm::company-head"></head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div th:replace="comm/comm::company-top"></div>
+        </nav>
+        <!--/. NAV TOP  -->
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div th:replace="comm/comm::company-left"></div>
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+			 <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-header">
+                            公司职位 <small>job</small>
+                        </h1>
+                    </div>
+                </div> 
+
+
+                 <!-- /. ROW  -->
+                                 
+            <div class="row">
+                <div class="col-md-4 col-sm-4" v-for="item in jobList">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {{item.title}}
+                        </div>
+                        <div class="panel-body">
+                            <p>介绍：：{{item.intro}}</p>
+                            <p>薪水： {{item.money}}</p>
+                        </div>
+                        <div class="panel-footer" @click="delPosition(item.positionId)">
+                            删除
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    <!-- /. ROW  -->
+				<footer><p>@ 管理控制台</p></footer>
+					</div>
+			 <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="/static/js/jquery.metisMenu.js"></script>
+    <!-- Custom Js -->
+    <script src="/static/js/custom-scripts.js"></script>
+
+    <script>
+        let vm = new Vue({
+            el:'#page-wrapper',
+            data:{
+                jobList:[]
+            },
+            methods:{
+                delPosition(positionId){
+                    console.log(positionId)
+                    axios.delete('/position/delPosition/'+positionId).then(res=>{
+                        if (res.data){
+                            alert('删除职位成功')
+                            axios.get('/position/company').then(res=>{
+                                this.jobList = res.data
+                            })
+                        }
+                    })
+                }
+            },
+            mounted(){
+                console.log('vue start')
+                axios.get('/position/company').then(res=>{
+                    this.jobList = res.data
+                })
+            }
+        })
+    </script>
+    
+   
+</body>
+</html>

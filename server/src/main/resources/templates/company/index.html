@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="comm/comm::company-head"></head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div th:replace="comm/comm::company-top"></div>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div th:replace="comm/comm::company-left"></div>
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+            <div id="page-inner">
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-header">
+                            用户 <small>个人信息</small>
+                        </h1>
+                    </div>
+                </div>
+                <!-- /. ROW  -->
+
+                <div class="row" id="app">
+                    <div class="box loginBox">
+                        <form class="form" method="post">
+                            <div class="f_row-2">
+                                <input type="text" class="input-field" placeholder="用户名" v-model="user.username" disabled name="name" required>
+                            </div>
+                            <div class="f_row-2 last">
+                                <input type="password" name="password" placeholder="密码" v-model="user.password" class="input-field" required>
+                            </div>
+                            <input class="submit-w3" type="button" @click="updateUserInfo(user)" value="修改">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /. PAGE INNER  -->
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="/static/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="/static/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="/static/js/morris/morris.js"></script>
+    <!-- Custom Js -->
+    <script src="/static/js/custom-scripts.js"></script>
+
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                user:{}
+            },
+            methods:{
+                updateUserInfo(user){
+                    let formData = new FormData()
+                    formData.append('password',this.user.password)
+                    formData.append('userId',this.user.userId)
+                    axios.put('/user/updateInfo',formData).then(res=>{
+                        if (res.data){
+                            alert('修改密码成功')
+                        }
+                    })
+                }
+            },
+            mounted(){
+                console.log('vue start')
+                axios.get('/user/info').then(res=>{
+                    this.user = res.data
+                })
+            }
+        })
+    </script>
+
+
+</body>
+
+</html>

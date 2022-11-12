@@ -1,0 +1,111 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area gray-bg position-relative">
+            <div class="single-slider d-flex align-items-center slider-height2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-caption hero-caption2">
+                                <h2>用户上传个人简历</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Hero Area End -->
+        <section class="contact-section section-padding">
+            <div class="container" id="app">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="contact-title">填写个人简历</h2>
+                    </div>
+                    <div class="col-lg-8">
+                        <form class="form-contact contact_form" method="post" id="contactForm" novalidate="novalidate">
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="name" id="telephone" v-model="telephone" type="text" placeholder="输入你的联系方式">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="email" id="email" v-model="email" type="email" placeholder="输入联系邮箱">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="text" id="address" v-model="address" type="text" placeholder="输入居住地址">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="wage" id="wage" type="text" v-model="wage" placeholder="期望薪资">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="intro" id="intro" type="text" v-model="intro" placeholder="个人介绍">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="content" id="message" v-model="content" cols="30" rows="9" placeholder="擅长的技术"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <button class="button button-contactForm boxed-btn" @click="saveResume">保存简历</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Area End -->
+    </main>
+    <!-- JS here -->
+    <!-- Jquery, Popper, Bootstrap -->
+    <div th:replace="comm/comm::user-js"></div>
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                telephone:'',
+                email:'',
+                address:'',
+                wage:'',
+                intro:'',
+                content:''
+            },
+            methods:{
+                saveResume(){
+                    let formData = new FormData()
+                    formData.append('telephone',this.telephone)
+                    formData.append('email',this.email)
+                    formData.append('address',this.address)
+                    formData.append('wage',this.wage)
+                    formData.append('intro',this.intro)
+                    formData.append('content',this.content)
+                    axios.post('/userResume/add',formData).then(res=>{
+                        if (res.data){
+                            alert('简历保存成功')
+                        }else {
+                            alert('出错了 请稍后再试')
+                        }
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>

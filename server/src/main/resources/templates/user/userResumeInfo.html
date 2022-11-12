@@ -1,0 +1,126 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area gray-bg position-relative">
+            <div class="single-slider d-flex align-items-center slider-height2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-caption hero-caption2">
+                                <h2>简历修改</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Hero Area End -->
+        <section class="contact-section section-padding">
+            <div class="container" id="app">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="contact-title">修改个人简历</h2>
+                    </div>
+                    <div class="col-lg-8">
+                        <form class="form-contact contact_form" method="post" id="contactForm" novalidate="novalidate">
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="name" id="telephone" v-model="userResume.telephone" type="text" placeholder="输入你的联系方式">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="email" id="email" v-model="userResume.email" type="email" placeholder="输入联系邮箱">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="text" id="address" v-model="userResume.address" type="text" placeholder="输入居住地址">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="wage" id="wage" type="text" v-model="userResume.wage" placeholder="期望薪资">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="intro" id="intro" type="text" v-model="userResume.intro" placeholder="个人介绍">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="content" id="message" v-model="userResume.content" cols="30" rows="9" placeholder="擅长的技术"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <button class="button button-contactForm boxed-btn" @click="saveResume(userResume)">修改简历</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Area End -->
+    </main>
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
+<div th:replace="comm/comm::user-js"></div>
+
+<script>
+    let vm = new Vue({
+        el:'#app',
+        data:{
+            userResume:{
+                telephone:'',
+                email:'',
+                address:'',
+                wage:'',
+                intro:'',
+                content:''
+            }
+
+        },
+        methods:{
+            saveResume(userResume){
+                let formData = new FormData()
+
+                formData.append('resumeId',userResume.resumeId)
+                formData.append('telephone',this.userResume.telephone)
+                formData.append('email',this.userResume.email)
+                formData.append('address',this.userResume.address)
+                formData.append('wage',this.userResume.wage)
+                formData.append('intro',this.userResume.intro)
+                formData.append('content',this.userResume.content)
+                axios.put('/userResume/update',formData).then(res=>{
+                    if (res.data){
+                        alert('简历保存成功')
+                    }else {
+                        alert('出错了 请稍后再试')
+                    }
+                })
+            }
+        },
+        mounted(){
+            console.log('vue start')
+            axios.get('/userResume/info').then(res=>{
+                this.userResume = res.data
+            })
+        }
+
+    })
+</script>
+</body>
+</html>

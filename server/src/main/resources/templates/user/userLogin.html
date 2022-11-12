@@ -1,0 +1,75 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main>
+        <!-- login Area Start -->
+        <div class="login-form-area section-padding" id="app">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-7 col-md-10">
+                        <div class="login-form">
+                            <!-- Login Heading -->
+                            <div class="login-heading">
+                                <span>请登录</span>
+                            </div>
+                            <!-- Single Input Fields -->
+                            <div class="input-box">
+                                <div class="single-input-fields">
+                                    <label>用户名</label>
+                                    <input type="text" placeholder="请输入用户名" v-model="username">
+                                </div>
+                                <div class="single-input-fields">
+                                    <label>密码</label>
+                                    <input type="password" placeholder="请输入密码" v-model="password"/>
+                                </div>
+                            </div>
+                            <!-- form Footer -->
+                            <div class="login-footer">
+                                <p>没有账号? 点击<a href="/user/userRegister">注册</a>  这</p>
+                                <button class="btn login-btn" @click="userLogin">登录</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- login Area End -->
+    </main>
+    <!-- JS here -->
+    <!-- Jquery, Popper, Bootstrap -->
+    <div th:replace="comm/comm::user-js"></div>
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                username:'',
+                password:''
+            },
+            methods:{
+                userLogin(){
+                    let username = this.username
+                    let password = this.password
+                    console.log(username,password)
+                    let formData = new FormData()
+                    formData.append("username",username)
+                    formData.append("password",password)
+                    axios.post('/user/login',formData).then(res=>{
+                        if (res.data){
+                            location.href = '/user/job';
+                        }else {
+                            alert('用户名不存在或密码错误')
+                        }
+                    })
+                }
+            },
+            mounted(){
+                console.log('vue start')
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::company-head"></head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div th:replace="comm/comm::company-top"></div>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div th:replace="comm/comm::company-left"></div>
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+			 <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-header">
+                            求职者管理 <small>user manager</small>
+                        </h1>
+                    </div>
+                </div> 
+                 <!-- /. ROW  -->
+               
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Advanced Tables -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                             所有用户
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th>招聘职位</th>
+                                            <th>期望薪水</th>
+                                            <th>用户名</th>
+                                            <th>地址</th>
+                                            <th>联系电话</th>
+                                            <th>简介</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="gradeA" v-for="item in receiveList">
+                                            <td>{{item.title}}</td>
+                                            <td>{{item.wage}}</td>
+                                            <td>{{item.username}}</td>
+                                            <td>{{item.address}}</td>
+                                            <td class="center">{{item.telephone}}</td>
+                                            <td class="center">{{item.intro}}</td>
+                                            <td class="center">
+<!--                                                <button @click="userResume(item.resumeId)">用户简历</button>-->
+                                                <button @click="addSuccess(item)">同意</button>
+                                                <button @click="delReceive(item.receiveId)">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!--End Advanced Tables -->
+                </div>
+            </div>
+                <!-- /. ROW  -->
+        </div>
+               <footer>@管理控制台</p></footer>
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="/static/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="/static/js/jquery.metisMenu.js"></script>
+     <!-- DATA TABLE SCRIPTS -->
+    <script src="/static/js/dataTables/dataTables.bootstrap.js"></script>
+    <script src="/static/js/dataTables/dataTables.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-example').dataTable();
+            });
+    </script>
+    <!-- Custom Js -->
+    <script src="/static/js/custom-scripts.js"></script>
+    <script>
+        let vm = new Vue({
+            el:'#wrapper',
+            data:{
+                receiveList:[]
+            },
+            methods:{
+                userResume(resumeId){
+                    console.log(resumeId)
+                },
+                addSuccess(receive){
+                    console.log(receive)
+                    let userId = receive.userId
+                    let companyId = receive.companyId
+                    let positionId = receive.positionId
+                    let formData = new FormData()
+                    formData.append('userId',userId)
+                    formData.append('companyId',companyId)
+                    formData.append('positionId',positionId)
+                    axios.post('/success/add',formData).then(res=>{
+                        if (res.data){
+                            alert('已向用户发送')
+                        }
+                    })
+                },
+                delReceive(receiveId){
+                    console.log(receiveId)
+                    axios.delete('/receive/delete/'+receiveId).then(res=>{
+                        if (res.data){
+                            alert('已删除此简历')
+                            axios.get('/receive/companyAllReceive').then(res=>{
+                                this.receiveList = res.data
+                            })
+                        }
+                    })
+                }
+
+            },
+            mounted(){
+                console.log('vue start')
+                axios.get('/receive/companyAllReceive').then(res=>{
+                    this.receiveList = res.data
+                })
+            }
+        })
+    </script>
+   
+</body>
+</html>

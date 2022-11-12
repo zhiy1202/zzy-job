@@ -1,0 +1,1 @@
+select p.title , p.money , p.intro , p.position_id from t_position p join t_company c on p.company_id = c.company_id where c.user_id = 1

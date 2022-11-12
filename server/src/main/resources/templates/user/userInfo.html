@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Validate Login & Register Forms Flat Responsive Widget Template :: w3layouts</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="Validate Login & Register Forms Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- Meta tag Keywords -->
+
+	<!-- css files -->
+	<link rel="stylesheet" href="/static/css/userRegisterStyle.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/static/css/font-awesome.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+	<!-- title -->
+	<h1>
+		用户个人信息
+	</h1>
+	<!-- //title -->
+
+	<!-- content -->
+	<div class="container-agille" id="app">
+		<div class="formBox level-login">
+			<div class="box boxShaddow"></div>
+			<div class="box loginBox">
+				<h3>修改密码</h3>
+				<form class="form" method="post">
+					<div class="f_row-2">
+						<input type="text" class="input-field" placeholder="Username" v-model="user.username" disabled name="name" required>
+					</div>
+					<div class="f_row-2 last">
+						<input type="password" name="password" placeholder="Password" v-model="user.password" class="input-field" required>
+					</div>
+					<input class="submit-w3" value="提交" @click="updateUserInfo(user)">
+				</form>
+			</div>
+
+			<div class="box registerBox wthree">
+				<span class="reg_bg"></span>
+				<h3>修改用户密码</h3>
+				<form class="form" action="#" method="post">
+					<div class="f_row-2">
+						<input type="text" class="input-field" placeholder="Username" name="name" required>
+					</div>
+					<div class="f_row-2 last">
+						<input type="password" name="password" placeholder="Password" id="password1" class="input-field" required>
+					</div>
+					<div class="f_row-2 last">
+						<input type="password" name="password" placeholder="Confirm Password" id="password2" class="input-field" required>
+					</div>
+					<input class="submit-w3" type="submit" value="Register">
+				</form>
+			</div>
+			<a href="#" class="regTag icon-add">
+				<i class="fa fa-repeat" aria-hidden="true"></i>
+			</a>
+		</div>
+	</div>
+	<!-- js files -->
+	<!-- Jquery -->
+	<script src="/static/js/jquery-2.2.3.min.js"></script>
+	<!-- //Jquery -->
+	<!-- input fields js -->
+	<script src="/static/js/input-field.js"></script>
+	<!-- //input fields js -->
+	<script>
+		let vm = new Vue({
+			el:'#app',
+			data:{
+				user:{
+					username:'',
+					password:''
+				}
+			},
+			methods:{
+				updateUserInfo(user){
+					console.log(user)
+					let formData = new FormData()
+					formData.append('password',this.user.password)
+					formData.append('userId',this.user.userId)
+					axios.put('/user/updateInfo',formData).then(res=>{
+						if (res.data){
+							alert('修改密码成功')
+						}
+					})
+				}
+			},
+			mounted(){
+				console.log('vue start')
+				axios.get('/user/info').then(res=>{
+					this.user = res.data
+				})
+			}
+		})
+	</script>
+
+
+</body>
+
+</html>

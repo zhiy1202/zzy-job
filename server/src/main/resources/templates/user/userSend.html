@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area gray-bg position-relative">
+            <div class="single-slider d-flex align-items-center slider-height2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-caption hero-caption2">
+                                <h2>投递的简历</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Hero Area End -->
+        <!--? Blog Area Start-->
+        <section class="blog_area section-padding">
+            <div class="container" id="app">
+                <div class="row">
+                    <div class="col-lg-8 mb-5 mb-lg-0">
+                        <div class="blog_left_sidebar">
+
+                            <article class="blog_item" v-for="item in receiveList">
+                                <div class="blog_item_img">
+                                    <a href="#" class="blog_item_date">
+                                        <h3 >{{item.money}}</h3>
+<!--                                        <p>Jan</p>-->
+                                    </a>
+                                </div>
+                                <div class="blog_details">
+                                    <a class="d-inline-block" @click="lookPositionDetail(item.positionId)">
+                                        <h2 class="blog-head" style="color: #2d2d2d;">{{item.title}}</h2>
+                                    </a>
+                                    <p>{{item.intro}}</p>
+                                    <ul class="blog-info-link">
+                                        <li><a href="#"><i class="fa fa-user"></i>{{item.comName}}</a></li>
+                                        <li><a @click="delReceive(item.receiveId)"><i class="fa fa-comments"></i> 删除</a></li>
+                                    </ul>
+                                </div>
+                            </article>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="blog_right_sidebar">
+                            <aside class="single_sidebar_widget search_widget">
+                                <form action="#">
+                                    <div class="form-group">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" placeholder='Search Keyword'
+                                                onfocus="this.placeholder = ''"
+                                                onblur="this.placeholder = 'Search Keyword'">
+                                            <div class="input-group-append">
+                                                <button class="btns" type="button"><i class="ti-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn"
+                                        type="submit">Search</button>
+                                </form>
+                            </aside>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Blog Area End -->
+    </main>
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
+
+    <!-- JS here -->
+    <!-- Jquery, Popper, Bootstrap -->
+    <div th:replace="comm/comm::user-js"></div>
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                receiveList:[]
+            },
+            methods:{
+                lookPositionDetail(positionId) {
+                    location.href = '/position/detail/'+positionId;
+                },
+                delReceive(receiveId){
+                    axios.delete('/receive/delete/'+receiveId).then(res=>{
+                        if (res.data){
+                            alert('已删除投递')
+                            axios.get('/receive/userReceive').then(res=>{
+                                this.receiveList = res.data
+                            })
+                        }
+                    })
+                }
+            },
+            mounted(){
+                console.log('vue start')
+                axios.get('/receive/userReceive').then(res=>{
+                    this.receiveList = res.data
+                })
+            }
+        })
+    </script>
+    </body>
+</html>

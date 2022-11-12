@@ -1,0 +1,81 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area gray-bg position-relative">
+            <div class="single-slider d-flex align-items-center slider-height2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-caption hero-caption2">
+                                <h2>收到的offer</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Hero Area End -->
+
+
+        <!-- featured_candidates_area_start  -->
+        <div class="featured_candidates_area section-bg2 candidate_page_padding">
+            <div class="container" id="app">
+                <div class="row">
+                    <div class="col-md-6 col-lg-3" v-for="item in offerList">
+                        <div class="single_candidates text-center">
+                            <a href="#"><h4>{{item.comName}}</h4></a>
+                            <a href="#"><p>{{item.title}}</p></a>
+                            <a href="#"><p>{{item.money}}</p></a>
+                            <a href="#"><p>{{item.comTelephone}}</p></a>
+                            <a href="#"><p>{{item.comAddress}}</p></a>
+                            <a @click="delUserSuccess(item.successId)">取消入职</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- featured_candidates_area_end  -->
+    </main>
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
+
+    <!-- JS here -->
+    <!-- Jquery, Popper, Bootstrap -->
+    <div th:replace="comm/comm::user-js"></div>
+
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+                offerList:[]
+            },
+            methods:{
+                delUserSuccess(successId){
+                    axios.delete('/success/delSuccess/'+successId).then(res=>{
+                        if (res.data){
+                            alert('以取消入职')
+                            axios.get('/success/userAllSuccess').then(res=>{
+                                this.offerList = res.data
+                            })
+                        }
+                    })
+                }
+            },
+            mounted(){
+                console.log('vue start')
+                axios.get('/success/userAllSuccess').then(res=>{
+                    this.offerList = res.data
+                })
+            }
+        })
+    </script>
+</body>
+</html>

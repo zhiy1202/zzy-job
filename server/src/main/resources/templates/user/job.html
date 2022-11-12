@@ -1,0 +1,119 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="comm/comm::user-head"></head>
+<body>
+<header>
+    <div th:replace="comm/comm::user-top"></div>
+</header>
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area gray-bg position-relative">
+            <div class="single-slider d-flex align-items-center slider-height2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-caption hero-caption2">
+                                <h2>工作列表</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Hero Area End -->
+        <!-- job_listing_area_start  -->
+        <div class="job_listing_area section-bg2 plus_padding" id="app">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="job_filter white-bg">
+                            <div class="form_inner white-bg">
+                                <h3>搜索</h3>
+                                <form action="#">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="single_field">
+                                                <input type="text" v-model="title" placeholder="搜索工作">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="reset_btn">
+                                <button  class="boxed-btn3 w-100" type="submit" @click="searchPosition">搜索</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+
+                        <div class="job_lists m-0">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12" v-for="item in jobList">
+                                    <div class="single_jobs white-bg d-flex justify-content-between">
+                                        <div class="jobs_left d-flex align-items-center">
+                                            <div class="jobs_conetent">
+                                                <a href="jobDetails.html"><h4>{{item.title}}</h4></a>
+                                                <div class="links_locat d-flex align-items-center">
+                                                    <div class="location">
+                                                        <p>  <i class="fas fa-map-marker-alt"></i> {{item.comAddress}}</p>
+                                                    </div>
+                                                    <div class="location">
+                                                        <p> <i class="far fa-clock"></i> {{item.money}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="jobs_right">
+                                            <div class="apply_now">
+                                                <a class="boxed-btn3" @click="lookPositionDetail(item.positionId)">查看详情</a>
+                                            </div>
+                                            <div class="date">
+                                                <p>{{item.createTime}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- job_listing_area_end  -->
+
+    </main>
+    <!-- Scroll Up -->
+    <div id="back-top" >
+        <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
+    </div>
+
+    <!-- JS here -->
+    <!-- Jquery, Popper, Bootstrap -->
+    <div th:replace="comm/comm::user-js"></div>
+    <script>
+        let vm = new Vue({
+            el:'#app',
+            data:{
+              jobList:[],
+              title:''
+            },
+            methods:{
+                lookPositionDetail(positionId){
+                    location.href = '/position/detail/'+positionId;
+                },
+                searchPosition(){
+                    axios.get('/position/searchTitle/'+this.title).then(res=>{
+                        this.jobList = res.data
+                    })
+                },
+            },
+            mounted() {
+                console.log('vue start')
+                axios.get('/position/all').then(res=>{
+                    this.jobList = res.data
+                })
+            }
+        })
+    </script>
+</body>
+</html>
